@@ -1,0 +1,34 @@
+{
+  "name": "api-de-un-sistema-de-auditor-a-y-eventos",
+  "version": "1.0.0",
+  "description": "El objetivo es construir un sistema de auditoría fiable y escalable para una aplicación. Queremos rastrear y almacenar cada acción importante del usuario (User created, User updated, User deleted) para su posterior análisis. Este sistema se construirá con múltiples servicios que se comunican de forma asincrónica.",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Angel Oropeza",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "3.1.10",
+    "standard": "17.1.2"
+  },
+  "dependencies": {
+    "@elastic/elasticsearch": "8.19.1",
+    "amqplib": "0.10.9",
+    "bcrypt": "6.0.0",
+    "dotenv": "17.2.2",
+    "express": "5.1.0",
+    "mysql2": "3.14.5",
+    "node-cron": "4.2.1",
+    "redis": "5.8.2",
+    "redis-commander": "0.9.0",
+    "sequelize": "6.37.7",
+    "zod": "4.1.5"
+  },
+  "eslintConfig": {
+    "extends": "standard"
+  }
+}
