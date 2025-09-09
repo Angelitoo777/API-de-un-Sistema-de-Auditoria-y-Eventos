@@ -1,8 +1,10 @@
 import { connectRabbitmq } from '../services/rabbitmq.services.js'
-import { client } from '../database/elastic.database.js'
+import { clientElastic } from '../database/elastic.database.js'
+import { clientRedis } from '../database/redis.database.js'
 
 const exchange = 'outbox_notifications'
 const routingKey = 'user.created'
+const client = clientRedis()
 
 const startConsumer = async () => {
   try {
@@ -18,12 +20,14 @@ const startConsumer = async () => {
       console.log('[Consumer] Indexando contenido en elastic search')
 
       try {
-        await client.index({
+        await clientElastic.index({
           index: 'audits',
           id: userData.id,
           document: userData
         })
         console.log('[Consumer] Se ha indexado exitosamente')
+
+        await client.del('audits_cache')
         channel.ack(msg)
       } catch (error) {
         channel.nack(msg)
