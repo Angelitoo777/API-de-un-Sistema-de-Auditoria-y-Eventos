@@ -5,7 +5,7 @@ dotenv.config()
 const ELASTIC_HOST = process.env.ELASTIC_HOST
 const ELASTIC_APIKEY = process.env.ELASTIC_APIKEY
 
-export const client = new Client({
+export const clientElastic = new Client({
   node: ELASTIC_HOST,
   tls: {
     rejectUnauthorized: false
