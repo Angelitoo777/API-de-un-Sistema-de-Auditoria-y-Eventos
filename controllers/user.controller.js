@@ -1,10 +1,7 @@
 import { userModel } from '../models/user.model.js'
-import { outboxModel } from '../models/outbox.model.js'
-import { Transaction, Op } from 'sequelize'
+import { Op } from 'sequelize'
 import { validateUser } from '../validations/user.validation.js'
-import { sequelize } from '../database/mysql.database.js'
-import bcrypt from 'bcrypt'
-import crypto from 'node:crypto'
+import { userCreate } from '../services/user.services.js'
 
 export class UserController {
   static async getAll (req, res) {
@@ -33,33 +30,7 @@ export class UserController {
         return res.status(409).json('Usuario ya registrado')
       }
 
-      const eventId = crypto.randomUUID()
-      const hasshPassword = await bcrypt.hash(password, 10)
-
-      const newUserAndOutbox = await sequelize.transaction({ isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE }, async (transaction) => {
-        const newUser = await userModel.create({
-          username,
-          email,
-          password: hasshPassword
-        }, { transaction })
-
-        const newOutbox = await outboxModel.create({
-          messageId: eventId,
-          topic: 'outbox_notifications',
-          payload: {
-            eventId,
-            eventType: 'user.created',
-            timestamp: new Date().toISOString(),
-            data: {
-              id: newUser.id,
-              username: newUser.username,
-              email: newUser.email
-            }
-          }
-        }, { transaction })
-
-        return { newUser, newOutbox }
-      })
+      const newUserAndOutbox = await userCreate(username, email, password)
 
       return res.status(201).json({ username: newUserAndOutbox.newUser.username, message: 'Usuario creado exitosamente' })
     } catch (error) {
