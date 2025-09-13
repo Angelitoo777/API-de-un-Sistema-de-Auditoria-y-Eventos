@@ -9,3 +9,17 @@ const validationUser = z.object({
 export const validateUser = (data) => {
   return validationUser.safeParse(data)
 }
+
+export const validatePickUser = (data) => {
+  return validationUser.pick({
+    username: true,
+    password: true
+  }).safeParse(data)
+}
+
+export const validatePartialUser = (data) => {
+  console.log('Datos de entrada:', data)
+  const result = validationUser.partial().safeParse(data)
+  console.log('Resultado de la validación:', result)
+  return result
+}

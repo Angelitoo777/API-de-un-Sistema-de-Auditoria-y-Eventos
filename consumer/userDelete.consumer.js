@@ -3,7 +3,7 @@ import { clientElastic } from '../database/elastic.database.js'
 import { clientRedis } from '../database/redis.database.js'
 
 const exchange = 'outbox_notifications'
-const routingKey = 'user.created'
+const routingKeyU = 'user.deleted'
 const client = clientRedis()
 
 const startConsumer = async () => {
@@ -11,9 +11,9 @@ const startConsumer = async () => {
     const channel = await connectRabbitmq()
 
     await channel.assertExchange(exchange, 'topic')
-    const q = await channel.assertQueue('userOutBox')
+    const q = await channel.assertQueue('userDeletedOutBox')
 
-    await channel.bindQueue(q.queue, exchange, routingKey)
+    await channel.bindQueue(q.queue, exchange, routingKeyU)
 
     channel.consume(q.queue, async (msg) => {
       const userData = JSON.parse(msg.content.toString())
