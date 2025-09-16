@@ -3,7 +3,7 @@ import { clientElastic } from '../database/elastic.database.js'
 import { clientRedis } from '../database/redis.database.js'
 
 const exchange = 'outbox_notifications'
-const routingKeyU = 'user.deleted'
+const routingKeyD = 'user.deleted'
 const client = clientRedis()
 
 const startConsumer = async () => {
@@ -13,7 +13,9 @@ const startConsumer = async () => {
     await channel.assertExchange(exchange, 'topic')
     const q = await channel.assertQueue('userDeletedOutBox')
 
-    await channel.bindQueue(q.queue, exchange, routingKeyU)
+    await channel.bindQueue(q.queue, exchange, routingKeyD)
+
+    await channel.prefetch(1)
 
     channel.consume(q.queue, async (msg) => {
       const userData = JSON.parse(msg.content.toString())
