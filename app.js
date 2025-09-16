@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import { cronJobOutBox } from './services/cronJob.services.js'
 import { routesOfUser } from './routes/user.routes.js'
 import { routesOfAudits } from './routes/audits.routes.js'
+import cookieParser from 'cookie-parser'
 dotenv.config()
 
 const app = express()
@@ -17,6 +18,7 @@ try {
 }
 
 app.use(express.json())
+app.use(cookieParser())
 
 app.use('/auth', routesOfUser)
 app.use('/api', routesOfAudits)
