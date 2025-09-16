@@ -15,6 +15,8 @@ const startConsumer = async () => {
 
     await channel.bindQueue(q.queue, exchange, routingKeyU)
 
+    await channel.prefetch(1)
+
     channel.consume(q.queue, async (msg) => {
       const userData = JSON.parse(msg.content.toString())
       console.log('[Consumer] Indexando contenido en elastic search')
